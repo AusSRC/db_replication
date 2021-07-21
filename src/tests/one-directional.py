@@ -59,6 +59,7 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
             _, n_rows = res.split(" ")
             self.assertEqual(int(n_rows), 1)
 
+    # NOTE(austin): I do not think this is working as expected...
     async def test_one_directional_write_duration(self):
         """Test how long it takes for Bucardo to write from one database to another.
         Set timeout to 10 seconds.
