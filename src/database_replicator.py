@@ -5,7 +5,7 @@ import psycopg2
 
 class DatabaseReplicator:
     """Database replication class. Used for multi-master experiment with Bucardo (which
-    is assumed to be running).
+    is assumed to be running on the master and replica instances).
 
     """
     def __init__(self):
@@ -40,13 +40,36 @@ class DatabaseReplicator:
         psycopg2.connect(**credentials)
         self.replica.append(credentials)
 
-    async def execute_in_master(self, query):
+    async def query_master(self, query):
         """Submit a query to all master database instances.
 
         """
+        results = []
         for creds in self.master:
             try:
                 conn = await asyncpg.connect(**creds)
-                await conn.execute(query)
+                res = await conn.execute(query)
+                results.append(res)
             finally:
                 await conn.close()
+        return results
+
+    async def query_replica(self, query):
+        """Write a query to all replica databases.
+
+        """
+        results = []
+        for creds in self.replica:
+            try:
+                conn = await asyncpg.connect(**creds)
+                res = await conn.execute(query)
+                results.append(res)
+            finally:
+                await conn.close()
+        return results
+
+    async def simultaneous_query(self, master_query, replica_query):
+        """Submit a query to all databases (master and replicas).
+
+        """
+        pass
