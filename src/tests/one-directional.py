@@ -1,6 +1,8 @@
 import time
-import unittest
 import datetime
+import string
+import random
+import unittest
 from database_replicator import DatabaseReplicator
 
 
@@ -59,41 +61,35 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
             _, n_rows = res.split(" ")
             self.assertEqual(int(n_rows), 1)
 
-    # NOTE(austin): I do not think this is working as expected...
-    async def test_one_directional_write_duration(self):
-        """Test how long it takes for Bucardo to write from one database to another.
-        Set timeout to 10 seconds.
+    async def test_one_directional_update_success(self):
+        """UPDATE query on the master database should be reflected in the replica.
+        Set the name a run to a random 20 letter string.
 
         """
-        timeout = 10.0
-
-        # Write to master
-        name = f"test_one_directional_write_{datetime.datetime.now().strftime('%H:%M:%S_%m/%d/%y')}"
+        # Update name in master
+        name = ''.join(random.choice(string.ascii_letters) for _ in range(20))
         await self.dbr.query_master(
             """
-            INSERT INTO 
-                wallaby.run(name, sanity_thresholds) 
-            VALUES 
-                ('%s', '{"flux": 10, "spatial_extent": [10, 10], "spectral_extent": [10, 10], "uncertainty_sigma": 5}')
+            UPDATE 
+                wallaby.run
+            SET 
+                name='%s'
+            WHERE
+                id='140'
             """ % (name)
         )
 
-        start = time.time()
-        duration = 0.0
+        # Wait
+        time.sleep(2)
 
-        # Check replica table until written
-        while duration < timeout:
-            results = await self.dbr.query_replica(
-                """
-                SELECT * FROM wallaby.run WHERE name='%s'
-                """ % (name)
-            )
+        # Check replica table
+        result = await self.dbr.query_replica(
+            """
+            SELECT * FROM wallaby.run WHERE name='%s'
+            """ % (name)
+        )
 
-            # Assert written
-            nrow_results = map(lambda x: int(x.split(" ")[1]), results)
-            if all(nrow_results) == 1:
-                duration = time.time() - start
-                print(f"Took {round(duration, 3)} s to write to remote")
-                break
-
-            duration = time.time() - start
+        # Assert
+        for res in result:
+            _, n_rows = res.split(" ")
+            self.assertEqual(int(n_rows), 1)
