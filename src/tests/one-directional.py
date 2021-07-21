@@ -2,7 +2,7 @@ import unittest
 from database_replicator import DatabaseReplicator
 
 
-class TestOneDirectionalReplication(unittest.TestCase):
+class TestOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
     """Makes use of DatabaseReplicator class. Since instance of that class
     for this test case.
 
@@ -14,12 +14,12 @@ class TestOneDirectionalReplication(unittest.TestCase):
         """
         self.dbr = DatabaseReplicator()
 
-    def test_one_directional_write_success(self):
+    async def test_one_directional_write_success(self):
         """Write some data to the local database and verify that the
         data has been written to remote databases.
 
         """
-        self.dbr.execute_in_master(
+        await self.dbr.execute_in_master(
             """
             INSERT INTO 
                 wallaby.run(name, sanity_thresholds) 
