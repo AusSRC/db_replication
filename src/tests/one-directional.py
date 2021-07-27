@@ -3,6 +3,7 @@ import datetime
 import string
 import random
 import unittest
+import xmltodict
 from utils import read_file, read_json
 from database_replicator import DatabaseReplicator
 
@@ -96,15 +97,16 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
             _, n_rows = res.split(" ")
             self.assertEqual(int(n_rows), 1)
 
+    # TODO(austin): Add to the products table for the detection
     async def test_one_directional_write_detection(self):
-        """INSERT query for writing a detection to the master database. Will write
-        a Run, Instance and Detection row.
+        """INSERT query for writing a detection to the master database.
+        Will write a Run, Instance and Detection row.
 
         """
         dt = datetime.datetime.now().strftime('%H:%M:%S_%m/%d/%y')
         name = f"test_one_directional_detection_write_{dt}"
 
-        # Create run
+        # Write run
         result = await self.dbr.fetchrow_master(
             """
             INSERT INTO 
@@ -115,7 +117,7 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
             """ % (name)
         )
 
-        # Create instance (arbitrary boundary)
+        # Write instance (arbitrary boundary)
         run_id = result[0]['id']
         boundary = {0, 1702, 2802, 4502, 0, 269}
         params = read_json("test_data/params.json")
@@ -135,8 +137,57 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
             None, params, None, None, None, None
         )
 
+        # Write detection
+        instance_id = result[0]['id']
+        link = "https://wallaby.aussrc.org/wallaby/vo/dl/dlmeta?ID="
+        content = await read_file("test_data/sofia_058_cat.xml", mode='r')
+        cat = xmltodict.parse(content)
+        tr = cat['VOTABLE']['RESOURCE']['TABLE']['DATA']['TABLEDATA']['TR']
+        fields = []
+        for _, j in enumerate(cat['VOTABLE']['RESOURCE']['TABLE']['FIELD']):
+            fields.append(j['@name'])
+        detection = {}
+        for i, v in enumerate(tr[0]['TD']):
+            try:
+                detection[fields[i]] = float(v)
+            except ValueError:
+                detection[fields[i]] = v
+        result = await self.dbr.fetchrow_master(
+            """
+            INSERT INTO 
+                wallaby.detection(
+                    run_id, instance_id, unresolved, name, x, y, z, x_min, x_max,
+                    y_min, y_max, z_min, z_max, n_pix, f_min, f_max, f_sum, rel, flag, rms,
+                    w20, w50, ell_maj, ell_min, ell_pa, ell3s_maj, ell3s_min, ell3s_pa, kin_pa,
+                    err_x, err_y, err_z, err_f_sum, ra, dec, freq, l, b, v_rad, v_opt, v_app, access_url
+                )
+            VALUES
+                (
+                    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19,
+                    $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, 
+                    $37, $38, $39, $40, $41, $42
+                )
+            RETURNING id
+            """,
+            run_id, instance_id, True,
+            detection['name'], detection['x'], detection['y'], detection['z'],
+            detection['x_min'], detection['x_max'],
+            detection['y_min'], detection['y_max'], detection['z_min'],
+            detection['z_max'], detection['n_pix'], detection['f_min'],
+            detection['f_max'], detection['f_sum'],
+            detection['rel'], detection['flag'], detection['rms'],
+            detection['w20'], detection['w50'], detection['ell_maj'],
+            detection['ell_min'], detection['ell_pa'],
+            detection['ell3s_maj'], detection['ell3s_min'],
+            detection['ell3s_pa'], detection['kin_pa'], detection['err_x'],
+            detection['err_y'], detection['err_z'], detection['err_f_sum'],
+            detection['ra'], detection['dec'], detection['freq'], 
+            None, None, None, None, None, link
+        )
+        detection_id = result[0]['id']
+
         # Wait
-        time.sleep(3)
+        time.sleep(5)
 
         # Check replica table for runs
         result_run = await self.dbr.query_replica(
@@ -151,8 +202,18 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
         # Check instance table
         result_instance = await self.dbr.query_replica(
             """
-            SELECT * FROM wallaby.instance WHERE name='%s'
+            SELECT * FROM wallaby.instance WHERE filename='%s'
             """ % (name)
+        )
+        for res in result_instance:
+            _, n_rows = res.split(" ")
+            self.assertEqual(int(n_rows), 1)
+
+        # Check detection table
+        result_detection = await self.dbr.query_replica(
+            """
+            SELECT * FROM wallaby.detection WHERE id='%s'
+            """ % (detection_id)
         )
         for res in result_instance:
             _, n_rows = res.split(" ")
