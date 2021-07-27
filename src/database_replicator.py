@@ -54,6 +54,20 @@ class DatabaseReplicator:
                 await conn.close()
         return results
 
+    async def fetchrow_master(self, query, *args, **kwargs):
+        """Submit a query to all master database instances.
+
+        """
+        results = []
+        for creds in self.master:
+            try:
+                conn = await asyncpg.connect(**creds)
+                res = await conn.fetchrow(query, *args, **kwargs)
+                results.append(res)
+            finally:
+                await conn.close()
+        return results
+
     async def query_replica(self, query):
         """Write a query to all replica databases.
 
