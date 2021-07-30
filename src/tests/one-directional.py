@@ -215,6 +215,6 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
             SELECT * FROM wallaby.detection WHERE id='%s'
             """ % (detection_id)
         )
-        for res in result_instance:
+        for res in result_detection:
             _, n_rows = res.split(" ")
             self.assertEqual(int(n_rows), 1)
