@@ -1,10 +1,11 @@
+import psycopg2
 import datetime
 import time
 import unittest
 from database_replicator import DatabaseReplicator
 
 
-class TestAsyncReplicationBenchmarking(unittest.IsolatedAsyncioTestCase):
+class TestReplicationBenchmarking(unittest.TestCase):
     """A collection of tests for benchmarking write/update query replication.
 
     """
@@ -27,82 +28,58 @@ class TestAsyncReplicationBenchmarking(unittest.IsolatedAsyncioTestCase):
             port="18020"
         )
 
-    async def test_one_directional_write_run_benchmark(self):
+    def test_one_directional_write_run_single_benchmark(self):
         """Test how long it takes to write a run to the replica.
+        For this experiment 
 
         """
-        update_id = 184
+        duration = 0.0
+        timeout = 10.0
+
+        try:
+            # connect to master
+            conn_master = psycopg2.connect(**self.dbr.master[0])
+            cur_master = conn_master.cursor()
+
+            try:
+                # connect to replica
+                conn_replica = psycopg2.connect(**self.dbr.replica[0])
+                cur_replica = conn_replica.cursor()
+
+                # write to master
+                name = f"benchmarking_run_write_{datetime.datetime.now().strftime('%H:%M:%S_%m/%d/%y')}"
+                cur_master.execute(
+                    """
+                    INSERT INTO 
+                        wallaby.run(name, sanity_thresholds) 
+                    VALUES 
+                        ('%s', '{"flux": 10, "spatial_extent": [10, 10], "spectral_extent": [10, 10], "uncertainty_sigma": 5}')
+                    RETURNING id
+                    """ % (name)
+                )
+                result = cur_master.fetchone()
+                conn_master.commit()
+                run_id = result[0]
+                dt = datetime.datetime.now()
+
+                # constantly check replica
+                while duration < timeout:
+                    cur_replica.execute(
+                        """
+                        SELECT * FROM wallaby.run WHERE id=%i
+                        """ % (run_id)
+                    )
+                    result_replica = cur_replica.fetchone()
+                    if result_replica is not None:
+                        time = round((datetime.datetime.now() - dt).total_seconds(), 3)
+                        print(f"Replication time = {time} seconds")
+                        break
+                    duration = (datetime.datetime.now() - dt).total_seconds()
+
+            finally:
+                cur_replica.close()
+                conn_replica.close()
         
-        # Add trigger to replica
-        await self.dbr.query_replica(
-            """
-            CREATE OR REPLACE FUNCTION log_run_replication()
-                RETURNS TRIGGER 
-                LANGUAGE PLPGSQL
-                AS
-            $$
-            BEGIN
-                UPDATE
-                    wallaby.run
-                SET 
-                    name=to_char(now(), 'YYYY-MM-DD_HH24:MI:SS')
-                WHERE 
-                    id=%i;
-                
-                RETURN NEW;
-            END;
-            $$
-            """ % (update_id)
-        )
-        await self.dbr.query_replica(
-            """
-            CREATE TRIGGER run_trigger
-            AFTER INSERT ON 
-                wallaby.run
-            EXECUTE PROCEDURE 
-                log_run_replication();
-            """
-        )
-
-        # Write to master
-        dt = datetime.datetime.now()
-        name = f"benchmarking_run_write_{dt.strftime('%H:%M:%S_%m/%d/%y')}"
-        result = await self.dbr.fetchrow_master(
-            """
-            INSERT INTO 
-                wallaby.run(name, sanity_thresholds) 
-            VALUES 
-                ('%s', '{"flux": 10, "spatial_extent": [10, 10], "spectral_extent": [10, 10], "uncertainty_sigma": 5}')
-            RETURNING id
-            """ % (name)
-        )
-        run_id = result[0]['id']
-        print(run_id)
-
-        # Wait
-        time.sleep(3)
-
-        result = await self.dbr.fetchrow_replica(
-            """
-            SELECT name FROM wallaby.run WHERE id=%i
-            """ % (run_id)
-        )
-        print(result)
-
-        # Check replica table
-        result = await self.dbr.fetchrow_replica(
-            """
-            SELECT name FROM wallaby.run WHERE id=%i
-            """ % (update_id)
-        )
-
-        # Calculate time
-        print(result[0]['name'])
-
-        # Delete trigger
-        await self.dbr.query_replica(
-            """
-            DROP TRIGGER run_trigger ON wallaby.run;
-            """
-        )
-        
+        finally:
+            cur_master.close()
+            conn_master.close()
