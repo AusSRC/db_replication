@@ -53,7 +53,7 @@ class DatabaseReplicator:
             "port": port,
         } 
         psycopg2.connect(**credentials)
-        self.replica.append(credentials)
+        self.bucardo.append(credentials)
 
 
     async def query_master(self, query):
