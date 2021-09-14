@@ -10,7 +10,8 @@ class DatabaseReplicator:
     """
     def __init__(self):
         self.master = []
-        self.replica = []
+        self.replica = [] 
+        self.bucardo = [] 
 
     def add_master(self, host, database, user, password, port="5432"):
         """Provide credentials for a master database.
@@ -39,6 +40,21 @@ class DatabaseReplicator:
         } 
         psycopg2.connect(**credentials)
         self.replica.append(credentials)
+
+    def add_bucardo(self, host, database, user, password, port="5432"):
+        """Add a bucardo database.
+
+        """
+        credentials = {
+            "host": host,
+            "database": database,
+            "user": user,
+            "password": password,
+            "port": port,
+        } 
+        psycopg2.connect(**credentials)
+        self.replica.append(credentials)
+
 
     async def query_master(self, query):
         """Submit a query to all master database instances.
