@@ -2,7 +2,7 @@ import psycopg2
 import datetime
 import time
 import unittest
-import logging,sys
+import logging,sys,csv
 from database_replicator import DatabaseReplicator
 
 
@@ -36,10 +36,9 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
         """
 
-        logging.basicConfig( stream=sys.stderr )
-        logging.getLogger( "SomeTest.testSomething" ).setLevel( logging.DEBUG )
-
         id_sync = 102
+        operation = "insert"
+
         duration = 0.0
         timeout = 1200.0
 
@@ -87,11 +86,17 @@ class TestReplicationBenchmarking(unittest.TestCase):
                 """ % (id_sync)
             )    
         result = cur_bucardo.fetchone()
-        started, ended, inserted  = result[0], result[1], result[2]
-        
-        with open('results.sql','a+') as f:
-            output = f.write(f"{started},{ended},{inserted}\n")
-        # Results will go to a CSV file
+
+        output = {'started':result[0], 
+                  'ended':result[1], 
+                  'rows':result[2],
+                  'operation': operation}
+                
+        with open(r'results.csv', 'a', newline='') as csvfile:
+            fieldnames = ['started','ended','rows','operation']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writerow(output)
+
 
         cur_master.close()
         conn_master.close()
