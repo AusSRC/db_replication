@@ -30,6 +30,8 @@ class TestReplicationBenchmarking(unittest.TestCase):
             port=18020
         )
 
+        
+
     def test_benchmark_100_insert(self):
         """
         """
@@ -86,10 +88,13 @@ class TestReplicationBenchmarking(unittest.TestCase):
             )    
         result = cur_bucardo.fetchone()
         started, ended, inserted  = result[0], result[1], result[2]
-
+        
+        with open('results.sql','a+') as f:
+            output = f.write(f"{started},{ended},{inserted}\n")
         # Results will go to a CSV file
 
         cur_master.close()
         conn_master.close()
         cur_bucardo.close()
         conn_bucardo.close()
+
