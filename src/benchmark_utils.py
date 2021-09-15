@@ -34,7 +34,7 @@ class BenchmarkUtils:
             fb.write(template_lines[0])
             for i in range(STARTING_ID,STARTING_ID + nrows-1):
                 fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
-            fb.write(template_lines[1].replace("{nrow}",str(i)) + ";")
+            fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
         
     def getBatch(self,nrows, table, operation):
 
