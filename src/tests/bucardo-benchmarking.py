@@ -102,7 +102,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         self.assertTrue(True)
 
 
-def test_benchmark_100_delete(self):
+    def test_benchmark_100_delete(self):
         """
         """
 
