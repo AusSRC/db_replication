@@ -122,7 +122,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         self.bu.buildBatch(nrows=id_sync, table = "wallaby.run", operation = "delete")
     
         # Get batch sentences
-        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.run", operation = "delete")    
+        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.run", operation = "delete", name = "benchmark")    
    
         # Execute SQL bundle
         cur_master.execute(
@@ -167,6 +167,3 @@ class TestReplicationBenchmarking(unittest.TestCase):
         conn_bucardo.close()
 
         self.assertTrue(True)
-
-if __name__ == '__main__':
-    unittest.main()
