@@ -25,7 +25,7 @@ class BenchmarkUtils:
             writer.writerow(output_stats)
     
     
-    def buildBatch(self, nrows, table, operation, name=None):
+    def buildBatch(self, nrows, table, operation):
         ## Open table template
         with open(table + "_"+ operation + ".template", 'r') as fb:               
             template_lines = fb.readlines()
