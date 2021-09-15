@@ -39,7 +39,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
         """
 
-        id_sync = 102
+        id_sync = 100
         operation = "insert"
 
         duration = 0.0
@@ -51,18 +51,17 @@ class TestReplicationBenchmarking(unittest.TestCase):
         conn_bucardo = psycopg2.connect(**self.dbr.bucardo[0])
         cur_bucardo = conn_bucardo.cursor()
 
-        # Build batch
+        # Build batch sentences
         self.bu.buildBatch(nrows=id_sync, table = "wallaby.run", operation = "insert")
-        
-        # Get inserts sentences
-        with open('100_insert.sql') as f:
-            contents = f.read()
+    
+        # Get batch sentences
+        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.run", operation = "insert")    
    
         # Execute SQL bundle
         cur_master.execute(
             """
             %s
-            """ % (contents)
+            """ % (content)
         )
         conn_master.commit()
 
@@ -82,6 +81,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
             else:
                 duration = timeout + 1
 
+            # Wait 1 second to avoid an overflow sending queries
             time.sleep(1)
         
         # Get results of the sync delays

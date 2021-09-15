@@ -35,5 +35,10 @@ class BenchmarkUtils:
                 fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
             fb.write(template_lines[1].replace("{nrow}",str(i)) + ";")
         
+    def getBatch(self,nrows, table, operation):
+
+        with open(str(nrows) + "_"+ operation + ".sql", 'r') as f:
+            contents = f.read()
+        return contents
 
 
