@@ -28,12 +28,12 @@ class BenchmarkUtils:
         ## Open table template
         with open(table + "_"+ operation + ".template", 'r') as fb:               
             template_lines = fb.readlines()
-
+            
         with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:               
             fb.write(template_lines[0])
             for i in range(0,nrows-1):
-                fb.write(template_lines[2].replace("{nrow}",str(i)) + ",")
-            fb.write(template_lines[2].replace("{nrow}",str(i)) + ";")
+                fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
+            fb.write(template_lines[1].replace("{nrow}",str(i)) + ";")
         
 
 
