@@ -52,7 +52,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo = conn_bucardo.cursor()
 
         # Build batch
-        self.bu.buildBatch(nrow=id_sync, table = "wallaby.run", operation = "insert")
+        self.bu.buildBatch(nrows=id_sync, table = "wallaby.run", operation = "insert")
         
         # Get inserts sentences
         with open('100_insert.sql') as f:
