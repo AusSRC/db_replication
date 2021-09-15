@@ -35,7 +35,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
 
         
 
-    def test_benchmark_100_insert(self):
+    def a_test_benchmark_100_insert(self):
         """
         """
 
@@ -102,7 +102,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         self.assertTrue(True)
 
 
-    def test_benchmark_100_delete(self):
+    def b_test_benchmark_100_delete(self):
         """
         """
 
