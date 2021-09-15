@@ -2,6 +2,7 @@ import csv
 
 # Output file for results
 OUTPUTFILE = "results.csv"
+STARTING_ID = 50000
 
 
 class BenchmarkUtils:
@@ -31,7 +32,7 @@ class BenchmarkUtils:
             
         with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:               
             fb.write(template_lines[0])
-            for i in range(0,nrows-1):
+            for i in range(STARTING_ID,STARTING_ID + nrows-1):
                 fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
             fb.write(template_lines[1].replace("{nrow}",str(i)) + ";")
         
