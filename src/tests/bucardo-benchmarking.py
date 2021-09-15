@@ -167,3 +167,6 @@ def test_benchmark_100_delete(self):
         conn_bucardo.close()
 
         self.assertTrue(True)
+
+if __name__ == '__main__':
+    unittest.main()
