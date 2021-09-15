@@ -99,6 +99,8 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo.close()
         conn_bucardo.close()
 
+        self.assertTrue(True)
+
 
 def test_benchmark_100_delete(self):
         """
@@ -163,3 +165,5 @@ def test_benchmark_100_delete(self):
         conn_master.close()
         cur_bucardo.close()
         conn_bucardo.close()
+
+        self.assertTrue(True)
