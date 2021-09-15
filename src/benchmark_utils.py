@@ -25,16 +25,20 @@ class BenchmarkUtils:
             writer.writerow(output_stats)
     
     
-    def buildBatch(self, nrows, table, operation):
+    def buildBatch(self, nrows, table, operation, name=None):
         ## Open table template
         with open(table + "_"+ operation + ".template", 'r') as fb:               
             template_lines = fb.readlines()
             
-        with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:               
-            fb.write(template_lines[0])
-            for i in range(STARTING_ID,STARTING_ID + nrows-1):
-                fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
-            fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
+        if operation == "insert":
+            with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:               
+                fb.write(template_lines[0])
+                for i in range(STARTING_ID,STARTING_ID + nrows-1):
+                    fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
+                fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
+        elif operation == "delete":
+            with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
+                fb.write(template_lines[0].replace("{name}",name) + ";")
         
     def getBatch(self,nrows, table, operation):
 
