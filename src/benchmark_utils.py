@@ -38,7 +38,7 @@ class BenchmarkUtils:
                 fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
         elif operation == "delete":
             with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
-                fb.write(template_lines[0].replace("{name}",name) + ";")
+                fb.write(template_lines[0].replace("{name}","benchmark") + ";")
         
     def getBatch(self,nrows, table, operation):
 
