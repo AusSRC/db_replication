@@ -4,6 +4,7 @@ import time
 import unittest
 import logging,sys,csv
 from database_replicator import DatabaseReplicator
+from benchmark_utils import BenchmarkUtils
 
 
 class TestReplicationBenchmarking(unittest.TestCase):
@@ -15,6 +16,8 @@ class TestReplicationBenchmarking(unittest.TestCase):
 
         """
         self.dbr = DatabaseReplicator()
+        self.bu = BenchmarkUtils()
+
         self.dbr.add_master(
             host="192.168.100.213", 
             database="sofiadb",
@@ -42,13 +45,15 @@ class TestReplicationBenchmarking(unittest.TestCase):
         duration = 0.0
         timeout = 1200.0
 
-    
         # connect to master and bucardo db
         conn_master = psycopg2.connect(**self.dbr.master[0])
         cur_master = conn_master.cursor()
         conn_bucardo = psycopg2.connect(**self.dbr.bucardo[0])
         cur_bucardo = conn_bucardo.cursor()
 
+        # Build batch
+        self.bu.buildBatch(nrow=id_sync, table = "wallaby.run", operation = "insert")
+        
         # Get inserts sentences
         with open('100_insert.sql') as f:
             contents = f.read()
@@ -86,20 +91,10 @@ class TestReplicationBenchmarking(unittest.TestCase):
                 """ % (id_sync)
             )    
         result = cur_bucardo.fetchone()
-
-        output = {'started':result[0], 
-                  'ended':result[1], 
-                  'rows':result[2],
-                  'operation': operation}
-                
-        with open(r'results.csv', 'a', newline='') as csvfile:
-            fieldnames = ['started','ended','rows','operation']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writerow(output)
-
-
+        
+        self.bu.addStats(row=result, operation=operation)
+        
         cur_master.close()
         conn_master.close()
         cur_bucardo.close()
         conn_bucardo.close()
-

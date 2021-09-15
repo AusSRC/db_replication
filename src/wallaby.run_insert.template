@@ -1,0 +1,2 @@
+INSERT INTO  wallaby.run(id, name, sanity_thresholds) VALUES
+({nrow},'benchmark_{nrow}', '{"flux": 10, "spatial_extent": [10, 10], "spectral_extent": [10, 10], "uncertainty_sigma": 5}')
