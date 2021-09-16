@@ -35,7 +35,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
 
         
 
-    def A_test_A_benchmark_100_insert(self):
+    def test_A_benchmark_100_insert(self):
         """
         """
 
