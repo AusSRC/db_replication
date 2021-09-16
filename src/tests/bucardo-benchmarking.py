@@ -155,7 +155,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo.execute(
                 """
                 SELECT started, ended, inserts FROM syncrun WHERE ended IS NOT NULL order by ended DESC;
-                """ % (id_sync)
+                """
             )    
         result = cur_bucardo.fetchone()
         
