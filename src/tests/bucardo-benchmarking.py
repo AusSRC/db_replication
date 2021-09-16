@@ -106,6 +106,8 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
         """
 
+        time.sleep(10)
+
         id_sync = 100
         operation = "delete"
 
