@@ -154,7 +154,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         # Get results of the sync delays
         cur_bucardo.execute(
                 """
-                SELECT started, ended, inserts FROM syncrun WHERE ended IS NOT NULL and deletes = %i;
+                SELECT started, ended, inserts FROM syncrun WHERE ended IS NOT NULL order by ended DESC;
                 """ % (id_sync)
             )    
         result = cur_bucardo.fetchone()
