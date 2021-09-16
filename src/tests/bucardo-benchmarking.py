@@ -86,7 +86,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         
         # Get results of the sync delays
         cur_bucardo.execute(
-                "SELECT started, ended, inserts FROM syncrun WHERE ended IS NOT NULL order by ended DESC;"
+                "SELECT started, ended, inserts FROM syncrun WHERE ended IS NOT NULL order by started DESC;"
             )    
         result = cur_bucardo.fetchone()
         
@@ -152,7 +152,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
             time.sleep(1)
         
         # Get results of the sync delays
-        cur_bucardo.execute("SELECT started, ended, deletes FROM syncrun WHERE ended IS NOT NULL order by ended DESC;")    
+        cur_bucardo.execute("SELECT started, ended, deletes FROM syncrun WHERE ended IS NOT NULL order by started DESC;")    
         result = cur_bucardo.fetchone()
         
         self.bu.addStats(row=result, nrows=id_sync, operation=operation)
