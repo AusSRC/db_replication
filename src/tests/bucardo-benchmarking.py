@@ -90,7 +90,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
             )    
         result = cur_bucardo.fetchone()
         
-        self.bu.addStats(row=result, operation=operation)
+        self.bu.addStats(row=result, nrows=id_sync, operation=operation)
         
         cur_master.close()
         conn_master.close()
@@ -155,7 +155,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo.execute("SELECT started, ended, deletes FROM syncrun WHERE ended IS NOT NULL order by ended DESC;")    
         result = cur_bucardo.fetchone()
         
-        self.bu.addStats(row=result, operation=operation)
+        self.bu.addStats(row=result, nrows=id_sync, operation=operation)
         
         cur_master.close()
         conn_master.close()

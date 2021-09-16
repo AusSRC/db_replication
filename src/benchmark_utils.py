@@ -13,11 +13,11 @@ class BenchmarkUtils:
         self.output = output
         self.fieldsnames = ['started','ended','rows','operation']
 
-    def addStats(self, row, operation = None):
+    def addStats(self, row, nrows, operation = None):
         
         output_stats = {'started':row[0], 
           'ended':row[1], 
-          'rows':row[2],
+          'rows':nrows,
           'operation': operation}
 
         with open(self.output, 'a', newline='') as csvfile:               
