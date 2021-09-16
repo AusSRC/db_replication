@@ -82,7 +82,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
                 duration = timeout + 1
 
             # Wait 1 second to avoid an overflow sending queries
-            time.sleep(1)
+            time.sleep(3)
         
         # Get results of the sync delays
         cur_bucardo.execute(
@@ -149,7 +149,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
                 duration = timeout + 1
 
             # Wait 1 second to avoid an overflow sending queries
-            time.sleep(1)
+            time.sleep(3)
         
         # Get results of the sync delays
         cur_bucardo.execute("SELECT started, ended, deletes FROM syncrun WHERE ended IS NOT NULL order by started DESC;")    
