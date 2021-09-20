@@ -46,6 +46,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         ["insert/delete",1000],
     ])
     def test_A_benchmark (self,operation,sequence):
+        """Test"""
         if operation == "insert/delete":
             self.run_insert(sequence)
             self.run_delete(sequence)
