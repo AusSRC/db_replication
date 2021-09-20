@@ -44,10 +44,12 @@ class TestReplicationBenchmarking(unittest.TestCase):
         )
 
     # A test template contains two parts based on the 
-    def test_A_benchmark (self,type,sequence):
-        if type == "insert/delete":
+    def test_A_benchmark (self,operation,sequence):
+        if operation == "insert/delete":
             self.run_insert(sequence)
             self.run_delete(sequence)
+            self.assertTrue(True)
+
     
     def run_insert(self, sequence):
         """ 
