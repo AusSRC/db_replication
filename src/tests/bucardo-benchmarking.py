@@ -14,11 +14,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
     """
 
     # Paramaterized expansions to generate test cases on-line
-    @parameterized.expand([
-        ["insert/delete", 100],
-        ["insert/delete", 200],
-        ["insert/delete",1000],
-    ])
+
     
     # Connection setup
     def setUp(self):
@@ -44,6 +40,11 @@ class TestReplicationBenchmarking(unittest.TestCase):
         )
 
     # A test template contains two parts based on the 
+    @parameterized.expand([
+        ["insert/delete", 100],
+        ["insert/delete", 200],
+        ["insert/delete",1000],
+    ])
     def test_A_benchmark (self,operation,sequence):
         if operation == "insert/delete":
             self.run_insert(sequence)
