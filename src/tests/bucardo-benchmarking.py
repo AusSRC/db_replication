@@ -9,12 +9,9 @@ from benchmark_utils import BenchmarkUtils
 
 
 class TestReplicationBenchmarking(unittest.TestCase):
-    """A collection of tests for benchmarking write/update query replication.
+    """A collection of tests for benchmarking write/delete query replication.
 
     """
-
-    # Paramaterized expansions to generate test cases on-line
-
     
     # Connection setup
     def setUp(self):
@@ -39,21 +36,29 @@ class TestReplicationBenchmarking(unittest.TestCase):
             port=18020
         )
 
-    # Decorator
+    # Decorator to include the stack of runs, for this: 
+    # 3 executions with 100, 200 and 1000 rows (with a pair of insert/delete for each).
     @parameterized.expand([
         ["insert/delete", 100],
         ["insert/delete", 200],
         ["insert/delete",1000],
     ])
     def test_A_benchmark_wallaby_run (self,operation,sequence):
+        """Unit Test for the Wallaby.run table.
+        Check table template to implement new data generation for it
+        
+        """
         if operation == "insert/delete":
+            # Each operation for us is a atomic set of insert and update
             self.run_insert(sequence)
             self.run_delete(sequence)
             self.assertTrue(True)
+        
 
     
     def run_insert(self, sequence):
-        """ 
+        """ Generic insert function.
+        Check tables templates to add new tables to insert data following a schema.
         """
 
         id_sync = sequence
@@ -115,9 +120,11 @@ class TestReplicationBenchmarking(unittest.TestCase):
         conn_bucardo.close()
 
     def run_delete(self,sequence):
-        """
+        """ Generic delete function.
+        Check tables templates to add new tables to insert data following a schema.
         """
 
+        # Sometimes Bucardo syncdb table is not populated so fast.
         time.sleep(3)
 
         id_sync = sequence
