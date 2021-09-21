@@ -1,4 +1,5 @@
 import csv
+import os,binascii
 
 # Output file for results
 OUTPUTFILE = "results.csv"
@@ -37,13 +38,34 @@ class BenchmarkUtils:
             
         if operation == "insert":
             with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:               
-                fb.write(template_lines[0])
-                for i in range(STARTING_ID,STARTING_ID + nrows-1):
-                    fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
-                fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
+                # Details to populate wallaby.run (see wallaby.run_insert.template)
+                if table=="wallaby.run":
+                    fb.write(template_lines[0])
+                    for i in range(STARTING_ID,STARTING_ID + nrows-1):
+                        fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
+                    # Write last row :)
+                    fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
+                # Details to populate wallaby.products (wallaby.products_insert.template)
+                # Pay attention: cube size is fixed to 10MBytes
+                elif table=="wallaby.products":
+                    fb.write(template_lines[0])
+                    for i in range(STARTING_ID,STARTING_ID + nrows-1):
+                        fb.write(template_lines[1].replace("{nrow}",str(i))
+                                                  .replace("{benchmark_nrow}",str(i))
+                                                  .replace("{cube}",binascii.b2a_hex(os.urandom(1024*1024*10))) + ",")
+                    # Write last row :)
+                    fb.write(template_lines[1].replace("{nrow}",str(i+1))
+                                                  .replace("{benchmark_nrow}",str(i+1))
+                                                  .replace("{cube}",binascii.b2a_hex(os.urandom(1024*1024*10))) + ";")
         elif operation == "delete":
+            
             with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
-                fb.write(template_lines[0].replace("{name}","benchmark") + ";")
+                # Details to delete wallaby.run (see wallaby.run_delete.template)
+                if table=="wallaby.run":
+                    fb.write(template_lines[0].replace("{name}","benchmark") + ";")
+                # Details to delete wallaby.products (see wallaby.products_delete.template)
+                elif table=="wallaby.products":
+                    fb.write(template_lines[0].replace("{benchmark_nrow}",STARTING_ID) + ";")
         
     def getBatch(self,nrows, table, operation):
         """Return sentences generated
