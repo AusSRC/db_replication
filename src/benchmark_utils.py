@@ -51,10 +51,12 @@ class BenchmarkUtils:
                     fb.write(template_lines[0])
                     for i in range(STARTING_ID,STARTING_ID + nrows-1):
                         fb.write(template_lines[1].replace("{nrow}",str(i))
-                                                  .replace("{detection_id}",str(i)) + ",")
+                                                  .replace("{detection_id}",str(i))
+                                                  .replace("{nrow}",str(i)) + ",")
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
-                                              .replace("{detection_id}",str(i+1)) + ";")                    
+                                              .replace("{detection_id}",str(i+1))
+                                              .replace("{nrow}",str(i+1)) + ";")                    
                 # Details to populate wallaby.products (wallaby.products_insert.template)
                 # Pay attention: cube size is fixed to 10MBytes
                 elif table=="wallaby.products":
