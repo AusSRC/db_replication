@@ -36,21 +36,21 @@ class TestReplicationBenchmarking(unittest.TestCase):
             port=18020
         )
 
-    # Decorator to include the stack of runs, for this: 
-    # 1 execution with 100 rows (with a pair of insert/delete for each).
-    @parameterized.expand([
-        ["insert/delete", 100]
-    ])
-    def test_A_benchmark_wallaby_run (self,operation,sequence):
-        """Unit Test for the Wallaby.run table.
-        Check table template to implement new data generation for it
+    # # Decorator to include the stack of runs, for this: 
+    # # 1 execution with 100 rows (with a pair of insert/delete for each).
+    # @parameterized.expand([
+    #     ["insert/delete", 100]
+    # ])
+    # def test_A_benchmark_wallaby_run (self,operation,sequence):
+    #     """Unit Test for the Wallaby.run table.
+    #     Check table template to implement new data generation for it
         
-        """
-        if operation == "insert/delete":
-            # Each operation for us is a atomic set of insert and update
-            self.run_insert_wallaby_run(sequence)
-            self.run_delete_wallaby_run(sequence)
-            self.assertTrue(True)
+    #     """
+    #     if operation == "insert/delete":
+    #         # Each operation for us is a atomic set of insert and update
+    #         self.run_insert_wallaby_run(sequence)
+    #         self.run_delete_wallaby_run(sequence)
+    #         self.assertTrue(True)
         
     
     # Decorator to include the stack of runs, for this: 
