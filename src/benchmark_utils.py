@@ -4,6 +4,7 @@ import os,binascii
 # Output file for results
 OUTPUTFILE = "results.csv"
 STARTING_ID = 50000
+PRODUCT_SIZE = 1024*1024
 
 
 class BenchmarkUtils:
@@ -53,11 +54,11 @@ class BenchmarkUtils:
                     for i in range(STARTING_ID,STARTING_ID + nrows-1):
                         fb.write(template_lines[1].replace("{nrow}",str(i))
                                                   .replace("{benchmark_nrow}",str(i))
-                                                  .replace("{cube}",binascii.b2a_hex(os.urandom(1024*1024*10))) + ",")
+                                                  .replace("{cube}",binascii.b2a_hex(os.urandom(PRODUCT_SIZE))) + ",")
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
                                                   .replace("{benchmark_nrow}",str(i+1))
-                                                  .replace("{cube}",binascii.b2a_hex(os.urandom(1024*1024*10))) + ";")
+                                                  .replace("{cube}",binascii.b2a_hex(os.urandom(PRODUCT_SIZE))) + ";")
         elif operation == "delete":
             
             with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
