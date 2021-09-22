@@ -14,14 +14,15 @@ class BenchmarkUtils:
         self.output = output
         self.fieldsnames = ['started','ended','rows','operation']
 
-    def addStats(self, row, nrows, operation = None):
+    def addStats(self, row, nrows, operation = None, table = None):
         """Creates stats for each individual operation performed within unit tests functions
         
         """
         output_stats = {'started':row[0], 
           'ended':row[1], 
           'rows':nrows,
-          'operation': operation}
+          'operation': operation,
+          'table': table}
 
         with open(self.output, 'a', newline='') as csvfile:               
             writer = csv.DictWriter(csvfile, fieldnames=self.fieldsnames)
