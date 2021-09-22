@@ -1,2 +1,2 @@
-INSERT INTO wallaby.instance (id,detection_id) VALUES
+INSERT INTO wallaby.instance (id, instance_id) VALUES
 ({nrow},{detection_id})
