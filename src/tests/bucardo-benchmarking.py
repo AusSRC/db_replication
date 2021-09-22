@@ -50,13 +50,13 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
         if operation == "insert/delete":
             # Each operation for us is a atomic set of insert and update
-            self.run_insert(sequence)
-            self.run_delete(sequence)
+            self.run_insert_wallaby_run(sequence)
+            self.run_delete_wallaby_run(sequence)
             self.assertTrue(True)
         
 
     
-    def run_insert(self, sequence):
+    def run_insert_wallaby_run(self, sequence):
         """ Generic insert function.
         Check tables templates to add new tables to insert data following a schema.
         """
@@ -119,7 +119,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo.close()
         conn_bucardo.close()
 
-    def run_delete(self,sequence):
+    def run_delete_wallaby_run(self,sequence):
         """ Generic delete function.
         Check tables templates to add new tables to insert data following a schema.
         """
