@@ -54,11 +54,11 @@ class BenchmarkUtils:
                     for i in range(STARTING_ID,STARTING_ID + nrows-1):
                         fb.write(template_lines[1].replace("{nrow}",str(i))
                                                   .replace("{benchmark_nrow}",str(i))
-                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)))) + ",")
+                                                  .replace("{cube}",str(os.urandom(PRODUCT_SIZE))) + ",")
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
                                                   .replace("{benchmark_nrow}",str(i+1))
-                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)))) + ";")
+                                                  .replace("{cube}",str(os.urandom(PRODUCT_SIZE))) + ";")
         elif operation == "delete":
             
             with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
