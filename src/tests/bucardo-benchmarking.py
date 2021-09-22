@@ -65,7 +65,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
         if operation == "insert/delete":
             # Each operation for us is a atomic set of insert and update
-            self.run_insert_wallaby_instance(sequence)
+            self.run_insert_wallaby_detection(sequence)
             self.run_insert_wallaby_products(sequence)
             self.run_delete_wallaby_products(sequence)
             self.assertTrue(True)
@@ -327,7 +327,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo.close()
         conn_bucardo.close()
 
-    def run_insert_wallaby_instance(self, sequence):
+    def run_insert_wallaby_detection(self, sequence):
         """ Generic insert function.
         Check tables templates to add new tables to insert data following a schema.
         """
@@ -345,10 +345,10 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo = conn_bucardo.cursor()
 
         # Build batch sentences
-        self.bu.buildBatch(nrows=id_sync, table = "wallaby.instance", operation = "insert")
+        self.bu.buildBatch(nrows=id_sync, table = "wallaby.detection", operation = "insert")
     
         # Get batch sentences
-        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.instance", operation = "insert")    
+        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.detection", operation = "insert")    
    
         # Execute SQL bundle
         cur_master.execute(
@@ -383,7 +383,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
             )    
         result = cur_bucardo.fetchone()
         
-        self.bu.addStats(row=result, nrows=id_sync, operation=operation, table="wallaby.instance")
+        self.bu.addStats(row=result, nrows=id_sync, operation=operation, table="wallaby.detection")
         
         cur_master.close()
         conn_master.close()
