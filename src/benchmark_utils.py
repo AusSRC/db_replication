@@ -47,7 +47,7 @@ class BenchmarkUtils:
                         fb.write(template_lines[1].replace("{nrow}",str(i)) + ",")
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1)) + ";")
-                elif table=="wallaby.instance":
+                elif table=="wallaby.detection":
                     fb.write(template_lines[0])
                     for i in range(STARTING_ID,STARTING_ID + nrows-1):
                         fb.write(template_lines[1].replace("{nrow}",str(i))
