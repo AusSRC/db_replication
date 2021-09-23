@@ -39,10 +39,10 @@ class TestReplicationBenchmarking(unittest.TestCase):
     # Decorator to include the stack of runs, for this: 
     # 1 execution with 100 rows (with a pair of insert/delete for each).
     @parameterized.expand([
-        ["insert/delete", 100]
+        ["insert/delete", 100],
         ["insert/delete", 1000],
         ["insert/delete", 2500],
-        ["insert/delete", 5000]
+        ["insert/delete", 5000],
     ])
     def test_A_benchmark_wallaby_run (self,operation,sequence):
         """Unit Test for the Wallaby.run table.
