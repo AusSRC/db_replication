@@ -63,7 +63,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         operation = "insert"
 
         duration = 0.0
-        timeout = 1200.0
+        timeout = 1500.0
 
         # connect to master and bucardo db
         conn_master = psycopg2.connect(**self.dbr.master[0])
@@ -104,6 +104,26 @@ class TestReplicationBenchmarking(unittest.TestCase):
             # Wait 1 second to avoid an overflow sending queries
             time.sleep(3)
         
+        ## Second round 
+        dt = datetime.datetime.now()
+        while duration < timeout:
+            # Execute query on Bucardo DB.
+            cur_bucardo.execute(
+                """
+                SELECT * FROM syncrun WHERE ended IS NULL;
+                """
+            )
+            result = cur_bucardo.fetchone()
+            if result is None :
+                duration = timeout + 1                
+            else:
+                duration = (datetime.datetime.now() - dt).total_seconds()
+
+            # Wait 1 second to avoid an overflow sending queries
+            time.sleep(3)
+        
+
+
         # Get results of the sync delays
         cur_bucardo.execute(
                 "SELECT started, ended, inserts FROM syncrun WHERE ended IS NOT NULL order by started DESC;"
