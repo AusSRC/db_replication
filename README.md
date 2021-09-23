@@ -37,10 +37,29 @@ The *start time* corresponds to when the records are inserted in the source tabl
 The *end time* corresponds to the time at which all locations have consolidated the data. 
 The *time difference* provides the total delay time in processing the whole replication for this concrete dbsync as indicated in out Bucardo setup.
 
+### Light tables benchmark
+
 ```
 cd src
-python -m unittest tests/bucardo-benchmarking.py -vvv
+python -m unittest tests/bucardo-benchmarking-lighttables.py -vvv
 ```
+
+### Fat tables benchmark
+
+```
+cd src
+python -m unittest tests/bucardo-benchmarking-fattables.py -vvv
+```
+
+### Foreign key contrainted tables benchmark
+
+```
+cd src
+python -m unittest tests/bucardo-benchmarking-cascade.py -vvv
+```
+
+## Results
+
 
 After that in the ``results.csv`` file will be the results of the benchmarks, with the following format (example):
 
@@ -58,7 +77,7 @@ cat results.csv
 
 Each execution will append data to this results file.
 
-### Templating tables for the benchmark
+## Templating tables for the benchmarks
 
 The set of tables templates that can be used from the unit tests and the benchmark are in ``src`` folder with the name ``<tablename>_<operation>.template``. These tables contain a template to autogenerate records in batch for different cases, for example insert or update in a single statement.
 
@@ -79,11 +98,11 @@ DELETE FROM wallaby.run where name LIKE '{name}_%';
 
 Here ``{name}`` will be changed by the name of the bechmark inserted rows with this ``name``.
 
-### Meta-testing
+## Meta-testing
 
 Each generated sequence of data for the tables can be checked in the ``src`` directory with the form ``<rows>_<operation>.sql``
 
-### Customizing
+## Customizing
 
 There are several options to customize the benchmarks:
 
