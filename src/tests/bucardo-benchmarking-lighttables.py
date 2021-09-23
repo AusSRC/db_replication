@@ -60,7 +60,8 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """ Generic insert function.
         Check tables templates to add new tables to insert data following a schema.
         """
-
+        time.sleep(5)
+        
         id_sync = sequence
         operation = "insert"
 
@@ -125,7 +126,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
 
         # Sometimes Bucardo syncdb table is not populated so fast.
-        time.sleep(3)
+        time.sleep(5)
 
         id_sync = sequence
         operation = "delete"
