@@ -104,24 +104,6 @@ class TestReplicationBenchmarking(unittest.TestCase):
             # Wait 1 second to avoid an overflow sending queries
             time.sleep(3)
         
-        ## Second round 
-        dt = datetime.datetime.now()
-        while duration < timeout:
-            # Execute query on Bucardo DB.
-            cur_bucardo.execute(
-                """
-                SELECT * FROM syncrun WHERE ended IS NULL;
-                """
-            )
-            result = cur_bucardo.fetchone()
-            if result is None :
-                duration = timeout + 1                
-            else:
-                duration = (datetime.datetime.now() - dt).total_seconds()
-
-            # Wait 1 second to avoid an overflow sending queries
-            time.sleep(3)
-        
 
 
         # Get results of the sync delays
