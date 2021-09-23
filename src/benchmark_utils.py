@@ -13,7 +13,7 @@ class BenchmarkUtils:
     """
     def __init__(self, output = OUTPUTFILE):
         self.output = output
-        self.fieldsnames = ['started','ended','rows','operation']
+        self.fieldsnames = ['started','ended','rows','operation','table']
 
     def addStats(self, row, nrows, operation = None, table = None):
         """Creates stats for each individual operation performed within unit tests functions
