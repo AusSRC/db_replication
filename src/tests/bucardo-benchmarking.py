@@ -36,39 +36,24 @@ class TestReplicationBenchmarking(unittest.TestCase):
             port=18020
         )
 
-    # # Decorator to include the stack of runs, for this: 
-    # # 1 execution with 100 rows (with a pair of insert/delete for each).
-    # @parameterized.expand([
-    #     ["insert/delete", 100]
-    # ])
-    # def test_A_benchmark_wallaby_run (self,operation,sequence):
-    #     """Unit Test for the Wallaby.run table.
-    #     Check table template to implement new data generation for it
-        
-    #     """
-    #     if operation == "insert/delete":
-    #         # Each operation for us is a atomic set of insert and update
-    #         self.run_insert_wallaby_run(sequence)
-    #         self.run_delete_wallaby_run(sequence)
-    #         self.assertTrue(True)
-        
-    
     # Decorator to include the stack of runs, for this: 
-    # 1 execution with 5 rows (with a pair of insert/delete for each).
+    # 1 execution with 100 rows (with a pair of insert/delete for each).
     @parameterized.expand([
-        ["insert/delete", 2]
+        ["insert/delete", 100]
+        ["insert/delete", 1000],
+        ["insert/delete", 2500],
+        ["insert/delete", 5000]
     ])
-    def test_B_benchmark_wallaby_products (self,operation,sequence):
-        """Unit Test for the Wallaby.products table.
+    def test_A_benchmark_wallaby_run (self,operation,sequence):
+        """Unit Test for the Wallaby.run table.
         Check table template to implement new data generation for it
         
         """
         if operation == "insert/delete":
             # Each operation for us is a atomic set of insert and update
-            self.run_insert_wallaby_detection(sequence)
-            self.run_insert_wallaby_products(sequence)
-            self.run_delete_wallaby_products(sequence)
-            self.assertTrue(True)
+            self.run_insert_wallaby_run(sequence)
+            self.run_delete_wallaby_run(sequence)
+            self.assertTrue(True)    
      
     
     def run_insert_wallaby_run(self, sequence):
@@ -199,6 +184,24 @@ class TestReplicationBenchmarking(unittest.TestCase):
         conn_bucardo.close()
 
 
+
+
+    # Decorator to include the stack of runs, for this: 
+    # 1 execution with 5 rows (with a pair of insert/delete for each).
+    @parameterized.expand([
+        ["insert/delete", 2]
+    ])
+    def test_B_benchmark_wallaby_products (self,operation,sequence):
+        """Unit Test for the Wallaby.products table.
+        Check table template to implement new data generation for it
+        
+        """
+        if operation == "insert/delete":
+            # Each operation for us is a atomic set of insert and update
+            self.run_insert_wallaby_detection(sequence)
+            self.run_insert_wallaby_products(sequence)
+            self.run_delete_wallaby_products(sequence)
+            self.assertTrue(True)
 
     def run_insert_wallaby_products(self, sequence):
         """ Generic insert function.
