@@ -1,0 +1,1 @@
+DELETE from wallaby.test_fattable where name LIKE '{name}_%';

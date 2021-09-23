@@ -69,6 +69,17 @@ class BenchmarkUtils:
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
                                                   .replace("{benchmark_nrow}",str(i+1))
                                                   .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)).hex())) + ";")
+                
+                elif table=="wallaby.test_fattable":
+                    fb.write(template_lines[0])
+                    for i in range(STARTING_ID,STARTING_ID + nrows-1):
+                        fb.write(template_lines[1].replace("{nrow}",str(i))
+                                                  .replace("{benchmark_nrow}",str(i))
+                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)).hex())) + ",")
+                    # Write last row :)
+                    fb.write(template_lines[1].replace("{nrow}",str(i+1))
+                                                  .replace("{benchmark_nrow}",str(i+1))
+                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)).hex())) + ";")
         elif operation == "delete":
             
             with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
@@ -78,6 +89,9 @@ class BenchmarkUtils:
                 # Details to delete wallaby.products (see wallaby.products_delete.template)
                 elif table=="wallaby.products":
                     fb.write(template_lines[0].replace("{benchmark_nrow}",STARTING_ID) + ";")
+                # Details to delete wallaby.products (see wallaby.products_delete.template)
+                elif table=="wallaby.test_fattable":
+                    fb.write(template_lines[0].replace("{name}","benchmark") + ";")
         
     def getBatch(self,nrows, table, operation):
         """Return sentences generated

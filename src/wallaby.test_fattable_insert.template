@@ -1,0 +1,2 @@
+INSERT INTO wallaby.test_fattable (id, name,data) VALUES
+({nrow},'benchmark_{benchmark_nrow}',decode('{cube}','hex'))
