@@ -4,7 +4,7 @@ import os,binascii
 # Output file for results
 OUTPUTFILE = "results.csv"
 STARTING_ID = 50000
-PRODUCT_SIZE = 1024
+#PRODUCT_SIZE = 1024 
 
 
 class BenchmarkUtils:
@@ -13,9 +13,9 @@ class BenchmarkUtils:
     """
     def __init__(self, output = OUTPUTFILE):
         self.output = output
-        self.fieldsnames = ['started','ended','rows','operation','table']
+        self.fieldsnames = ['started','ended','rows','operation','table', 'product_size']
 
-    def addStats(self, row, nrows, operation = None, table = None):
+    def addStats(self, row, nrows, operation = None, table = None, product_size = None):
         """Creates stats for each individual operation performed within unit tests functions
         
         """
@@ -30,7 +30,7 @@ class BenchmarkUtils:
             writer.writerow(output_stats)
     
     
-    def buildBatch(self, nrows, table, operation):
+    def buildBatch(self, nrows, table, operation, product_size):
         """Creates a batch of sentences to execute if query is insert or delete
 
         """
@@ -39,7 +39,7 @@ class BenchmarkUtils:
             template_lines = fb.readlines()
             
         if operation == "insert":
-            with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:               
+            with open(str(nrows) + "_"+ operation + "_" + str(product_size) + "_" + table + ".sql", 'w') as fb:               
                 # Details to populate wallaby.run (see wallaby.run_insert.template)
                 if table=="wallaby.run":
                     fb.write(template_lines[0])
@@ -64,25 +64,25 @@ class BenchmarkUtils:
                     for i in range(STARTING_ID,STARTING_ID + nrows-1):
                         fb.write(template_lines[1].replace("{nrow}",str(i))
                                                   .replace("{benchmark_nrow}",str(i))
-                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)).hex())) + ",")
+                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(product_size)).hex())) + ",")
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
                                                   .replace("{benchmark_nrow}",str(i+1))
-                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(PRODUCT_SIZE)).hex())) + ";")
+                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(product_size)).hex())) + ";")
                 
                 elif table=="wallaby.test_fattable":
                     fb.write(template_lines[0])
                     for i in range(STARTING_ID,STARTING_ID + nrows-1):
                         fb.write(template_lines[1].replace("{nrow}",str(i))
                                                   .replace("{benchmark_nrow}",str(i))
-                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(int(PRODUCT_SIZE/2))).hex())) + ",")
+                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(int(product_size/2))).hex())) + ",")
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
                                                   .replace("{benchmark_nrow}",str(i+1))
                                                   .replace("{cube}",str(binascii.b2a_hex(os.urandom(int(PRODUCT_SIZE/2))).hex())) + ";")
         elif operation == "delete":
             
-            with open(str(nrows) + "_"+ operation + ".sql", 'w') as fb:
+            with open(str(nrows) + "_"+ operation + "_" + str(product_size) + "_" + table + ".sql", 'w') as fb:
                 # Details to delete wallaby.run (see wallaby.run_delete.template)
                 if table=="wallaby.run":
                     fb.write(template_lines[0].replace("{name}","benchmark") + ";")
@@ -93,11 +93,11 @@ class BenchmarkUtils:
                 elif table=="wallaby.test_fattable":
                     fb.write(template_lines[0].replace("{name}","benchmark") + ";")
         
-    def getBatch(self,nrows, table, operation):
+    def getBatch(self,nrows, table, operation,product_size):
         """Return sentences generated
         
         """
-        with open(str(nrows) + "_"+ operation + ".sql", 'r') as f:
+        with open(str(nrows) + "_"+ operation + "_" + str(product_size) + "_" + table + ".sql", 'r') as f:
             contents = f.read()
         return contents
 

@@ -7,6 +7,12 @@ from parameterized import parameterized
 from database_replicator import DatabaseReplicator
 from benchmark_utils import BenchmarkUtils
 
+# Size of cubes 
+MB_05=1024*1024*0.5 # 512KB
+MB_1=1024*1024*1
+MB_2=1024*1024*2
+MB_5=1024*1024*5
+MB_10=1024*1024*10 # 10MB
 
 class TestReplicationBenchmarking(unittest.TestCase):
     """A collection of tests for benchmarking write/delete query replication.
@@ -39,21 +45,40 @@ class TestReplicationBenchmarking(unittest.TestCase):
     # Decorator to include the stack of runs, for this: 
     # 1 execution with 100 rows (with a pair of insert/delete for each).
     @parameterized.expand([
-        ["insert/delete", 5]
+    ["insert/delete", 2,  MB_2],
+    ["insert/delete", 5,  MB_2],
+    ["insert/delete", 10, MB_2],
+    ["insert/delete", 15, MB_2],
+    ["insert/delete", 20, MB_2],
+    ["insert/delete", 25, MB_2],
+    ["insert/delete", 30, MB_2],
+    ["insert/delete", 35, MB_2],
+    ["insert/delete", 40, MB_2],
+    ["insert/delete", 45, MB_2],
+    ["insert/delete", 50, MB_2],
+    ["insert/delete", 60, MB_2],
+    ["insert/delete", 70, MB_2],
+    ["insert/delete", 80, MB_2],
+    ["insert/delete", 90, MB_2],
+    ["insert/delete", 100, MB_2],
+    ["insert/delete", 150, MB_2],
+    ["insert/delete", 200, MB_2]
     ])
-    def test_A_benchmark_wallaby_testfattable (self,operation,sequence):
+    def test_A_benchmark_wallaby_testfattable (self,operation,sequence,product_size):
         """Unit Test for the Wallaby.test_fattable table.
         Check table template to implement new data generation for it
         
         """
         if operation == "insert/delete":
             # Each operation for us is a atomic set of insert and update
-            self.run_insert_wallaby_testfattable(sequence)
-            self.run_delete_wallaby_testfattable(sequence)
+            self.run_insert_wallaby_testfattable(sequence,product_size)
+            time.sleep(100)
+            self.run_delete_wallaby_testfattable(sequence,product_size)
+            time.sleep(100)
             self.assertTrue(True)    
      
     
-    def run_insert_wallaby_testfattable(self, sequence):
+    def run_insert_wallaby_testfattable(self,sequence,product_size):
         """ Generic insert function.
         Check tables templates to add new tables to insert data following a schema.
         """
@@ -72,10 +97,10 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo = conn_bucardo.cursor()
 
         # Build batch sentences
-        self.bu.buildBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "insert")
+        self.bu.buildBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "insert", product_size=product_size )
     
         # Get batch sentences
-        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "insert")    
+        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "insert", product_size=product_size)    
    
         # Execute SQL bundle
         cur_master.execute(
@@ -112,14 +137,14 @@ class TestReplicationBenchmarking(unittest.TestCase):
             )    
         result = cur_bucardo.fetchone()
         
-        self.bu.addStats(row=result, nrows=id_sync, operation=operation, table="wallaby.test_fattable")
+        self.bu.addStats(row=result, nrows=id_sync, operation=operation, table="wallaby.test_fattable", product_size=product_size)
         
         cur_master.close()
         conn_master.close()
         cur_bucardo.close()
         conn_bucardo.close()
 
-    def run_delete_wallaby_testfattable(self,sequence):
+    def run_delete_wallaby_testfattable(self,sequence,product_size):
         """ Generic delete function.
         Check tables templates to add new tables to insert data following a schema.
         """
@@ -140,10 +165,10 @@ class TestReplicationBenchmarking(unittest.TestCase):
         cur_bucardo = conn_bucardo.cursor()
 
         # Build batch sentences
-        self.bu.buildBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "delete")
+        self.bu.buildBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "delete", product_size=product_size)
     
         # Get batch sentences
-        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "delete")    
+        content = self.bu.getBatch(nrows=id_sync, table = "wallaby.test_fattable", operation = "delete", product_size=product_size)    
    
         # Execute SQL bundle
         cur_master.execute(
