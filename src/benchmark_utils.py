@@ -79,7 +79,7 @@ class BenchmarkUtils:
                     # Write last row :)
                     fb.write(template_lines[1].replace("{nrow}",str(i+1))
                                                   .replace("{benchmark_nrow}",str(i+1))
-                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(int(PRODUCT_SIZE/2))).hex())) + ";")
+                                                  .replace("{cube}",str(binascii.b2a_hex(os.urandom(int(product_size/2))).hex())) + ";")
         elif operation == "delete":
             
             with open(str(nrows) + "_"+ operation + "_" + str(product_size) + "_" + table + ".sql", 'w') as fb:
