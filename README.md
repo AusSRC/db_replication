@@ -35,7 +35,7 @@ This table controls:
 
 The *start time* corresponds to when the records are inserted in the source table of the location where the query is executed.
 The *end time* corresponds to the time at which all locations have consolidated the data. 
-The *time difference* provides the total delay time in processing the whole replication for this concrete dbsync as indicated in out Bucardo setup.
+The *time difference* provides the total delay time in processing the whole replication for this concrete dbsync as indicated in our Bucardo setup.
 
 ### Light tables benchmark
 
@@ -44,12 +44,21 @@ cd src
 python -m unittest tests/bucardo-benchmarking-lighttables.py -vvv
 ```
 
+
+
 ### Fat tables benchmark
+
+In order to start working with heavy tables benchmark, you need to set up a test table to enable our metrics. This new table will be used to store binary (bytea type) data products generated randomly, avoiding to change original Wallaby databases and tables.
+
+To create this environment, before start the test, please follow the [next tutorial](./docs/bucardo_binary.md).
+
+Once created the test environment, start the tests
 
 ```
 cd src
 python -m unittest tests/bucardo-benchmarking-fattables.py -vvv
 ```
+
 
 ### Foreign key contrainted tables benchmark
 
@@ -64,18 +73,35 @@ python -m unittest tests/bucardo-benchmarking-cascade.py -vvv
 After that in the ``results.csv`` file will be the results of the benchmarks, with the following format (example):
 
 ```
-2021-09-20 11:31:48.070508+00:00,2021-09-20 11:31:52.505424+00:00,200,delete
-2021-09-20 11:31:54.017121+00:00,2021-09-20 11:31:59.288187+00:00,1000,insert
-2021-09-20 11:32:03.258886+00:00,2021-09-20 11:32:07.721145+00:00,1000,delete
+2021-09-20 11:31:48.070508+00:00,2021-09-20 11:31:52.505424+00:00,200,delete,wallaby.test_fattable
+2021-09-20 11:31:54.017121+00:00,2021-09-20 11:31:59.288187+00:00,1000,insert,wallaby.run
+2021-09-20 11:32:03.258886+00:00,2021-09-20 11:32:07.721145+00:00,1000,delete,wallaby.run
 ```
 
-CVS schema is: ``start_date``,``end_date``,``rows``,``operation``
+CVS schema is: ``start_date``,``end_date``,``rows``,``operation``,``table``
 
 ```
 cat results.csv
 ```
 
 Each execution will append data to this results file.
+
+Another way to extract metrics is to export results from ``syncrun`` table in Bucardo:
+
+```
+Copy (select inserts, deletes, started, ended, status, details from syncrun order by started DESC) To '/tmp/test.csv' With CSV DELIMITER ',' HEADER;
+```
+
+That will be produce the following data:
+
+```
+inserts,deletes,started,ended,status,details
+0,10,2021-09-27 09:37:21.339024+00,2021-09-27 09:37:26.835931+00,Complete (KID 1706),""
+5,0,2021-09-27 09:35:30.097892+00,2021-09-27 09:36:02.355176+00,Complete (KID 1706),""
+0,10,2021-09-27 09:33:35.265159+00,2021-09-27 09:33:40.096236+00,Complete (KID 1706),""
+5,0,2021-09-27 09:31:44.0273+00,2021-09-27 09:32:15.78222+00,Complete (KID 1706),""
+```
+
 
 ## Templating tables for the benchmarks
 
@@ -122,12 +148,14 @@ STARTING_ID = 50000
 
 ````
 @parameterized.expand([
-        ["insert/delete", 100],
-        ["insert/delete", 200],
-        ["insert/delete",1000],
+        ["insert/delete", <rows>, <size>],
+        ["insert/delete", <rows>, <size>],
+        ["insert/delete", <rows>, <size>],
+        ...
     ])
 ````
 
+Where  `insert/delete` is the operation performed within the unit tests, ``<rows>`` is the number os rows to insert/delete at the same time, and ``<size>`` is the binary data size of the object that will be replicated (for heavy tables).
 
 
 
