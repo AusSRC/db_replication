@@ -80,7 +80,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
     ["insert/delete", 70, MB_2],
     ["insert/delete", 80, MB_2],
     ["insert/delete", 90, MB_2],
-    ["insert/delete", 100,MB_2]
+    ["insert/delete", 100,MB_2],
 
     ["insert/delete", 2,  MB_5],
     ["insert/delete", 5,  MB_5],
@@ -99,7 +99,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
     ["insert/delete", 90, MB_5],
     ["insert/delete", 100,MB_5],
 
-    ["insert/delete", 2,  MB_10,
+    ["insert/delete", 2,  MB_10],
     ["insert/delete", 5,  MB_10],
     ["insert/delete", 10, MB_10],
     ["insert/delete", 15, MB_10],
@@ -119,10 +119,12 @@ class TestReplicationBenchmarking(unittest.TestCase):
         """
         if operation == "insert/delete":
             # Each operation for us is a atomic set of insert and update
-            self.run_insert_wallaby_testfattable(sequence,product_size)
-            time.sleep(60)
-            self.run_delete_wallaby_testfattable(sequence,product_size)
-            time.sleep(60)
+            for i in range (0,10):
+                self.run_insert_wallaby_testfattable(sequence,product_size)
+                time.sleep(60)
+                self.run_delete_wallaby_testfattable(sequence,product_size)
+                time.sleep(60)
+            
             self.assertTrue(True)    
      
     
