@@ -63,7 +63,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
     ["insert/delete", 70, MB_05, 10],
     ["insert/delete", 80, MB_05, 10],
     ["insert/delete", 90, MB_05, 10],
-    ["insert/delete", 100,MB_05, 10]
+    ["insert/delete", 100,MB_05, 10],
 
     ["insert/delete", 2,  MB_2, 10],
     ["insert/delete", 5,  MB_2, 10],
