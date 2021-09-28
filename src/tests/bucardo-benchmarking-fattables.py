@@ -47,8 +47,24 @@ class TestReplicationBenchmarking(unittest.TestCase):
         )
 
     # Decorator to include the stack of runs, for this: 
-    # 1 execution with 100 rows (with a pair of insert/delete for each).
     @parameterized.expand([
+    ["insert/delete", 2,  MB_05],
+    ["insert/delete", 5,  MB_05],
+    ["insert/delete", 10, MB_05],
+    ["insert/delete", 15, MB_05],
+    ["insert/delete", 20, MB_05],
+    ["insert/delete", 25, MB_05],
+    ["insert/delete", 30, MB_05],
+    ["insert/delete", 35, MB_05],
+    ["insert/delete", 40, MB_05],
+    ["insert/delete", 45, MB_05],
+    ["insert/delete", 50, MB_05],
+    ["insert/delete", 60, MB_05],
+    ["insert/delete", 70, MB_05],
+    ["insert/delete", 80, MB_05],
+    ["insert/delete", 90, MB_05],
+    ["insert/delete", 100,MB_05]
+
     ["insert/delete", 2,  MB_2],
     ["insert/delete", 5,  MB_2],
     ["insert/delete", 10, MB_2],
@@ -64,7 +80,37 @@ class TestReplicationBenchmarking(unittest.TestCase):
     ["insert/delete", 70, MB_2],
     ["insert/delete", 80, MB_2],
     ["insert/delete", 90, MB_2],
-    ["insert/delete", 100, MB_2]
+    ["insert/delete", 100,MB_2]
+
+    ["insert/delete", 2,  MB_5],
+    ["insert/delete", 5,  MB_5],
+    ["insert/delete", 10, MB_5],
+    ["insert/delete", 15, MB_5],
+    ["insert/delete", 20, MB_5],
+    ["insert/delete", 25, MB_5],
+    ["insert/delete", 30, MB_5],
+    ["insert/delete", 35, MB_5],
+    ["insert/delete", 40, MB_5],
+    ["insert/delete", 45, MB_5],
+    ["insert/delete", 50, MB_5],
+    ["insert/delete", 60, MB_5],
+    ["insert/delete", 70, MB_5],
+    ["insert/delete", 80, MB_5],
+    ["insert/delete", 90, MB_5],
+    ["insert/delete", 100,MB_5],
+
+    ["insert/delete", 2,  MB_10,
+    ["insert/delete", 5,  MB_10],
+    ["insert/delete", 10, MB_10],
+    ["insert/delete", 15, MB_10],
+    ["insert/delete", 20, MB_10],
+    ["insert/delete", 25, MB_10],
+    ["insert/delete", 30, MB_10],
+    ["insert/delete", 35, MB_10],
+    ["insert/delete", 40, MB_10],
+    ["insert/delete", 45, MB_10],
+    ["insert/delete", 50, MB_10]
+    
     ])
     def test_A_benchmark_wallaby_testfattable (self,operation,sequence,product_size):
         """Unit Test for the Wallaby.test_fattable table.
