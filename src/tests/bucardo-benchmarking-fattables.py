@@ -13,6 +13,10 @@ MB_1=1024*1024*1
 MB_2=1024*1024*2
 MB_5=1024*1024*5
 MB_10=1024*1024*10 # 10MB
+MB_20=1024*1024*20 # 20MB
+MB_30=1024*1024*30 # 30MB
+MB_30=1024*1024*40 # 40MB
+MB_50=1024*1024*50 # 50MB
 
 class TestReplicationBenchmarking(unittest.TestCase):
     """A collection of tests for benchmarking write/delete query replication.
@@ -60,9 +64,7 @@ class TestReplicationBenchmarking(unittest.TestCase):
     ["insert/delete", 70, MB_2],
     ["insert/delete", 80, MB_2],
     ["insert/delete", 90, MB_2],
-    ["insert/delete", 100, MB_2],
-    ["insert/delete", 150, MB_2],
-    ["insert/delete", 200, MB_2]
+    ["insert/delete", 100, MB_2]
     ])
     def test_A_benchmark_wallaby_testfattable (self,operation,sequence,product_size):
         """Unit Test for the Wallaby.test_fattable table.
@@ -72,9 +74,9 @@ class TestReplicationBenchmarking(unittest.TestCase):
         if operation == "insert/delete":
             # Each operation for us is a atomic set of insert and update
             self.run_insert_wallaby_testfattable(sequence,product_size)
-            time.sleep(100)
+            time.sleep(60)
             self.run_delete_wallaby_testfattable(sequence,product_size)
-            time.sleep(100)
+            time.sleep(60)
             self.assertTrue(True)    
      
     
