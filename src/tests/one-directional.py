@@ -18,12 +18,15 @@ class TestAsyncOneDirectionalReplication(unittest.IsolatedAsyncioTestCase):
 
         """
         self.dbr = DatabaseReplicator()
+        
         self.dbr.add_master(
             host="localhost", 
             database="sofiadb",
             user="postgres",
             password="postgres"
         )
+
+        # Replica as a new object
         self.dbr.add_replica(
             host="161.111.167.192",
             database="sofiadb",

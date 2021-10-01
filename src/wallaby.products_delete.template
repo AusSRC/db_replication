@@ -1,0 +1,1 @@
+DELETE from wallaby.products where detection_id > {benchmark_nrow};

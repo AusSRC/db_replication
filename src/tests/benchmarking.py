@@ -24,8 +24,8 @@ class TestReplicationBenchmarking(unittest.TestCase):
             host="161.111.167.192",
             database="sofiadb",
             user="postgres",
-            password="AmIgAgR0u;P",
-            port="18020"
+            password="",
+            port=""
         )
 
     def test_one_directional_write_run_single_benchmark(self):
