@@ -1,0 +1,2 @@
+INSERT INTO wallaby.products (id, detection_id,cube) VALUES
+({nrow},{benchmark_nrow},decode('{cube}','hex'))
