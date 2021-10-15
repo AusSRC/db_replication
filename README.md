@@ -10,7 +10,13 @@ In this repository you will find all the necessary material for:
 - Reproduce the results, data, and diagrams using a NoteBook with JupuyterHub.
 
 Poster: 
-" Asymmetric distribution of data products from WALLABY, an SKA precursor neutral hydrogen survey" 
+
+**Asymmetric distribution of data products from WALLABY, an SKA precursor neutral hydrogen survey**
+
+Manuel Parra-Royón (1), Austin Shen (2), Tristan Reynolds (3), Parthasarathy Venkataraman (4), M. Ángeles Mendoza (1), Susana Sanchéz-Expósito (1), Julián Garrido (1), Slava Kitaeff (2) and Lourdes Verdes-Montenegro (1)
+
+*(1) Instituto de Astrofísica de Andalucía, IAA-CSIC, Spain, (2) CSIRO Space and Astronomy, PO Box 1130, Bentley WA 6102, Australia, (3) International Centre for Radio Astronomy Research (ICRAR), The University of Western Australia, 35 Stirling Hwy, Crawley, WA, 6009, Australia and ARC Centre of Excellence for All Sky Astrophysics in 3 Dimensions (ASTRO 3D), (4) Canadian Initiative for Radio Astronomy Data Analysis, CIRADA, Canada.*
+
 
 ## Create a Bucardo environment
 
