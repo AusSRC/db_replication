@@ -1,8 +1,36 @@
-# Database replication
+# Database replication and distribution of data products
+
+This repository is part of a research work on the feasibility of using data replication tools and services between different geographically separated sites. In this context a poster has been developed to highlight the use of such tools to solve the problem of data distribution and replication.
+
+In this repository you will find all the necessary material for:
+- Reproduce all the experimentation of the tests carried out with the Bucardo replication tool:
+    - Set-up, development and deployment.
+    - Benchmarks generation.
+- Validate the results obtained.
+- Reproduce the results, data, and diagrams using a NoteBook with JupuyterHub.
+
+Poster: 
+
+**Asymmetric distribution of data products from WALLABY, an SKA precursor neutral hydrogen survey**
+
+Manuel Parra-Royón (1), Austin Shen (2), Tristan Reynolds (3), Parthasarathy Venkataraman (4), M. Ángeles Mendoza (1), Susana Sanchéz-Expósito (1), Julián Garrido (1), Slava Kitaeff (2) and Lourdes Verdes-Montenegro (1)
+
+*(1) Instituto de Astrofísica de Andalucía, IAA-CSIC, Spain, (2) CSIRO Space and Astronomy, PO Box 1130, Bentley WA 6102, Australia, (3) International Centre for Radio Astronomy Research (ICRAR), The University of Western Australia, 35 Stirling Hwy, Crawley, WA, 6009, Australia and ARC Centre of Excellence for All Sky Astrophysics in 3 Dimensions (ASTRO 3D), (4) Canadian Initiative for Radio Astronomy Data Analysis, CIRADA, Canada.*
+
+
+## Create a Bucardo environment
+
+In order to create an initial environment you have to install:
+
+- PostgreSQL
+- Bucardo ()
+
+After that, an extra database schema is required, to do that follow the [next tutorial](./docs/bucardo_binary.md).
+
 
 A collection of Python code for a database replication helper class and tests. 
 
-## Running locally
+## Running test locally
 
 We will go through how to run the test found at `src/tests/one-directional.py`. Note that some default database credentials are provided, but to run the test you will need to provide a valid password for the local and remote PostgreSQL instances.
 
@@ -158,4 +186,22 @@ STARTING_ID = 50000
 Where  `insert/delete` is the operation performed within the unit tests, ``<rows>`` is the number os rows to insert/delete at the same time, and ``<size>`` is the binary data size of the object that will be replicated (for heavy tables).
 
 
+## Results and reproducibility
 
+To reproduce plots and get the data ready to extract statistics, we encorage to use a JupyterLab Notebook:
+[results plots and diagrams](./results/benchmark_results.ipynb).
+
+Also you can use 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/manuparra/db_replication/HEAD?urlpath=https%3A%2F%2Fgithub.com%2Fmanuparra%2Fdb_replication%2Fblob%2Fmain%2Fresults%2Fbenchmark_results.ipynb)
+
+# References
+
+(1) Koribalski, Bärbel S., Lister Staveley-Smith, Tobias Westmeier, Paolo Serra, Kristine Spekkens, O. I. Wong, Karen Lee-Waddell et al. "WALLABY–an SKA Pathfinder H i survey." Astrophysics and Space Science 365, no. 7 (2020): 1-35.
+(2) Thomas, Shaun M. PostgreSQL High Availability Cookbook. Packt Publishing Ltd, 2017.
+(3)Nakanishi,H.,K.Yamanaka,S.Tokunaga,T.Ozeki,Y.Homma,H.Ohtsu,Y.Ishiietal."Designforthedistributeddatalocatorservicefor multi-sitedatarepositories."FusionEngineeringandDesign165(2021):112197.
+(4) PostgreSQL. “Replication, Clustering, and Connection Pooling.” Replication, Clustering, and Connection Pooling - PostgreSQL wiki. Accessed October 14, 2021. https://wiki.postgresql.org/wiki/Replication,_Clustering,_and_Connection_Pooling. (5) Github - Aussrc/Db_Replication: Multi-Master Database Replication Experiment". 2021. Github. https://github.com/AusSRC/db_replication.
+
+
+# Acknowledgements
+
+We acknowledge financial support from the State Agency for Research of the Spanish Ministry of Science, Innovation and Universities through the "Center of Excellence Severo Ochoa" awarded to the Instituto de Astrofísica de Andalucía (SEV-2017-0709) and from the grant RTI2018-096228-B-C31 (Ministry of Science, Innovation and Universities / State Agency for Research / European Regional Development Funds, European Union). In addition, we acknowledge financial support from the Ministry of Science, Innovation and Universities and the European Regional Development Funds (EQC2019-005707-P) and the Regional Government of Andalusia (SOMM17-5208- IAA-2017). We also acknowledge financial support from the Ministry of Science and Innovation, from the budgetary line 28.06.000x.430.09 of the General State Budgets of 2021, for the coordination of the participation in SKA- SPAIN and finally we acknowledge financial support from the grant 54A Scientific Research and Innovation Program (Regional Council of Economy, Knowledge, Business and Universities, Regional Government of Andalusia and the European Regional Development Funds 2014-2020, program D1113102E3).
