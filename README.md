@@ -27,8 +27,73 @@ In order to create an initial environment you have to install:
 
 After that, an extra database schema is required, to do that follow the [next tutorial](./docs/bucardo_binary.md).
 
+### Create Bucardo configurations from each location
 
-A collection of Python code for a database replication helper class and tests. 
+*Apply on AusSRC PostgreSQL host*
+
+Add AusSRC as source of WALLABY databases: 
+```
+bucardo add db wallabydb_spsrc dbname=wallabydb user=bucardo port=18020
+bucardo add db wallabydb_aussrc dbname=wallabydb user=bucardo host=146.118.69.200
+bucardo add db wallabydb_cirada dbname=wallabydb user=bucardo host=206.12.93.99
+bucardo add relgroup wallabydb_relgroup wallaby.detection wallaby.instance wallaby.products wallaby.run ...
+bucardo add dbgroup wallabydb_dbgroup wallabydb_aussrc:source wallabydb_spsrc:target wallabydb_cirada:target
+bucardo add sync wallabydb_dbsync relgroup=wallabydb_relgroup dbgroup=wallabydb_dbgroup
+```
+
+Remove AusSRC as source of WALLABY databases:
+```
+bucardo del sync wallabydb_dbsync
+bucardo del dbgroup wallabydb_dbgroup
+bucardo del relgroup wallabydb_relgroup
+bucardo del db wallabydb_spsrc
+bucardo del db wallabydb_aussrc
+bucardo del db wallabydb_cirada
+```
+
+*Apply on CIRADA PostgreSQL host*
+
+Add CIRADA as source of WALLABY databases: 
+```
+bucardo add db wallabydb_spsrc dbname=wallabydb user=bucardo port=18020
+bucardo add db wallabydb_aussrc dbname=wallabydb user=bucardo host=146.118.69.200
+bucardo add db wallabydb_cirada dbname=wallabydb user=bucardo host=206.12.93.99
+bucardo add relgroup wallabydb_relgroup wallaby.kinematic_model
+bucardo add dbgroup wallabydb_dbgroup wallabydb_cirada:source wallabydb_aussrc:target wallabydb_spsrc:target 
+bucardo add sync wallabydb_dbsync relgroup=wallabydb_relgroup dbgroup=wallabydb_dbgroup
+```
+
+Remove CIRADA as source of WALLABY databases:
+```
+bucardo del sync wallabydb_dbsync
+bucardo del dbgroup wallabydb_dbgroup
+bucardo del relgroup wallabydb_relgroup
+bucardo del db wallabydb_spsrc
+bucardo del db wallabydb_aussrc
+bucardo del db wallabydb_cirada
+```
+
+*Apply on SPSSRC PostgreSQL host*
+
+Add SPSSRC as source of WALLABY databases: 
+```
+bucardo add db wallabydb_spsrc dbname=wallabydb user=bucardo port=18020
+bucardo add db wallabydb_aussrc dbname=wallabydb user=bucardo host=146.118.69.200
+bucardo add db wallabydb_cirada dbname=wallabydb user=bucardo host=206.12.93.99
+bucardo add relgroup wallabydb_relgroup wallaby.cutouts
+bucardo add dbgroup wallabydb_dbgroup wallabydb_spsrc:source wallabydb_cirada:target wallabydb_aussrc:target 
+bucardo add sync wallabydb_dbsync relgroup=wallabydb_relgroup dbgroup=wallabydb_dbgroup
+```
+
+Remove SPSSRC as source of WALLABY databases:
+```
+bucardo del sync wallabydb_dbsync
+bucardo del dbgroup wallabydb_dbgroup
+bucardo del relgroup wallabydb_relgroup
+bucardo del db wallabydb_spsrc
+bucardo del db wallabydb_aussrc
+bucardo del db wallabydb_cirada
+```
 
 ## Running test locally
 
